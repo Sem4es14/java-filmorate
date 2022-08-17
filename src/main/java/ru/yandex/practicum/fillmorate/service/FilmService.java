@@ -22,30 +22,33 @@ public class FilmService {
         id = 1L;
     }
 
-    public Long addFilm(FilmAddRequest request) {
+    public Film addFilm(FilmAddRequest request) {
         Film film = Film.builder()
                 .id(id++)
                 .description(request.getDescription())
-                .duration(Duration.ofMinutes(request.getDuration()))
+                .duration(request.getDuration())
                 .name(request.getName())
                 .releaseDate(request.getReleaseDate())
                 .build();
         films.put(film.getId(), film);
 
-        return film.getId();
+        return film;
     }
 
-    public Long updateFilm(FilmUpdateRequest request) {
+    public Film updateFilm(FilmUpdateRequest request) {
+        if (!films.containsKey(request.getId())) {
+            throw new FilmNotFound("Film with id: " + request.getId() + " is not found");
+        }
         Film film = Film.builder()
                 .id(request.getId())
                 .description(request.getDescription())
-                .duration(Duration.ofMinutes(request.getDuration()))
+                .duration(request.getDuration())
                 .name(request.getName())
                 .releaseDate(request.getReleaseDate())
                 .build();
         films.put(film.getId(), film);
 
-        return film.getId();
+        return film;
     }
 
     public List<Film> getAll() {

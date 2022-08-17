@@ -21,7 +21,7 @@ public class UserService {
         id = 1L;
     }
 
-    public Long createUser(UserCreateRequest request) {
+    public User createUser(UserCreateRequest request) {
         User user = User.builder()
                 .id(id++)
                 .birthday(request.getBirthday())
@@ -29,12 +29,18 @@ public class UserService {
                 .login(request.getLogin())
                 .name(request.getName())
                 .build();
+        if (user.getName().isEmpty()) {
+            user.setName(request.getLogin());
+        }
         users.put(user.getId(), user);
 
-        return user.getId();
+        return user;
     }
 
-    public Long updateUser(UserUpdateRequest request) {
+    public User updateUser(UserUpdateRequest request) {
+        if (!users.containsKey(request.getId())) {
+            throw new UserNotFound("User with id: " + request.getId() + " is not found");
+        }
         User user = User.builder()
                 .id(request.getId())
                 .birthday(request.getBirthday())
@@ -42,9 +48,12 @@ public class UserService {
                 .login(request.getLogin())
                 .name(request.getName())
                 .build();
+        if (user.getName().isEmpty()) {
+            user.setName(request.getLogin());
+        }
         users.put(user.getId(), user);
 
-        return user.getId();
+        return user;
     }
 
     public List<User> getAll() {

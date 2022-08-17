@@ -1,5 +1,6 @@
 package ru.yandex.practicum.fillmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -23,15 +25,17 @@ public class UserController {
     }
 
     @PostMapping
-    public Long createUser(@Valid @RequestBody UserCreateRequest request) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest request) {
+        log.info("Request to create user: " + request);
 
-        return userService.createUser(request);
+        return ResponseEntity.of(Optional.of(userService.createUser(request)));
     }
 
     @PutMapping
-    public Long updateUser(@Valid @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<User> updateUser(@Valid @RequestBody UserUpdateRequest request) {
+        log.info("Request to update user: " + request);
 
-        return userService.updateUser(request);
+        return ResponseEntity.of(Optional.of(userService.updateUser(request)));
     }
 
 

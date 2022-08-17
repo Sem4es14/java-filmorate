@@ -1,5 +1,6 @@
 package ru.yandex.practicum.fillmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.fillmorate.model.Film;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
@@ -21,15 +23,17 @@ public class FilmController {
     }
 
     @PostMapping
-    public Long addFilm(@Valid @RequestBody FilmAddRequest request) {
+    public ResponseEntity<Film> addFilm(@Valid @RequestBody FilmAddRequest request) {
+        log.info("Request to add film: " + request);
 
-        return filmService.addFilm(request);
+        return ResponseEntity.of(Optional.of(filmService.addFilm(request)));
     }
 
     @PutMapping
-    public Long updateFilm(@Valid @RequestBody FilmUpdateRequest request) {
+    public ResponseEntity<Film> updateFilm(@Valid @RequestBody FilmUpdateRequest request) {
+        log.info("Request to update film: " + request);
 
-        return filmService.updateFilm(request);
+        return ResponseEntity.of(Optional.of(filmService.updateFilm(request)));
     }
 
 
