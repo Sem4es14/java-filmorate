@@ -1,12 +1,11 @@
-package ru.yandex.practicum.fillmorate.service;
+package ru.yandex.practicum.fillmorate.service.film;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
-import ru.yandex.practicum.fillmorate.model.Film;
+import ru.yandex.practicum.fillmorate.model.film.Film;
 import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,4 @@
-package ru.yandex.practicum.fillmorate.model.validation;
-
-import org.springframework.web.bind.annotation.ControllerAdvice;
+package ru.yandex.practicum.fillmorate.requests.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,7 +6,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.LocalDate;
 
 import static java.lang.annotation.ElementType.*;
 

@@ -1,8 +1,8 @@
-package ru.yandex.practicum.fillmorate.service;
+package ru.yandex.practicum.fillmorate.service.user;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.fillmorate.exception.user.UserNotFound;
-import ru.yandex.practicum.fillmorate.model.User;
+import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.user.UserCreateRequest;
 import ru.yandex.practicum.fillmorate.requests.user.UserUpdateRequest;
 
@@ -27,11 +27,8 @@ public class UserService {
                 .birthday(request.getBirthday())
                 .email(request.getEmail())
                 .login(request.getLogin())
-                .name(request.getName())
+                .name(request.getName().isEmpty() ? request.getLogin() : request.getName())
                 .build();
-        if (user.getName().isEmpty()) {
-            user.setName(request.getLogin());
-        }
         users.put(user.getId(), user);
 
         return user;
@@ -46,7 +43,7 @@ public class UserService {
                 .birthday(request.getBirthday())
                 .email(request.getEmail())
                 .login(request.getLogin())
-                .name(request.getName())
+                .name(request.getName().isEmpty() ? request.getLogin() : request.getName())
                 .build();
         if (user.getName().isEmpty()) {
             user.setName(request.getLogin());

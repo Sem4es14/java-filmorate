@@ -1,13 +1,13 @@
-package ru.yandex.practicum.fillmorate.controller;
+package ru.yandex.practicum.fillmorate.controller.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.fillmorate.model.User;
+import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.user.UserCreateRequest;
 import ru.yandex.practicum.fillmorate.requests.user.UserUpdateRequest;
-import ru.yandex.practicum.fillmorate.service.UserService;
+import ru.yandex.practicum.fillmorate.service.user.UserService;
 
 import javax.validation.Valid;
 import java.util.List;

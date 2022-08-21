@@ -1,4 +1,4 @@
-package ru.yandex.practicum.fillmorate.exceptionHandler;
+package ru.yandex.practicum.fillmorate.exceptionHandler.film;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,14 +6,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yandex.practicum.fillmorate.exception.ExceptionDTO;
-import ru.yandex.practicum.fillmorate.exception.user.UserNotFound;
+import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
 
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-public class UserExceptionHandler {
-    @ExceptionHandler(value = UserNotFound.class)
-    public ResponseEntity<ExceptionDTO> headerNotFound(UserNotFound e) {
+public class FilmExceptionHandler {
+    @ExceptionHandler(value = FilmNotFound.class)
+    public ResponseEntity<ExceptionDTO> filmNotFound(FilmNotFound e) {
         return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
     }
 

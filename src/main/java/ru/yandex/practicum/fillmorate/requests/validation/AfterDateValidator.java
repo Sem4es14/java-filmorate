@@ -1,6 +1,4 @@
-package ru.yandex.practicum.fillmorate.model.validation;
-
-import org.springframework.web.bind.annotation.ControllerAdvice;
+package ru.yandex.practicum.fillmorate.requests.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

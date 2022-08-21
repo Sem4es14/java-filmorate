@@ -1,7 +1,7 @@
 package ru.yandex.practicum.fillmorate.requests.film;
 
 import lombok.Data;
-import ru.yandex.practicum.fillmorate.model.validation.AfterDate;
+import ru.yandex.practicum.fillmorate.requests.validation.AfterDate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
