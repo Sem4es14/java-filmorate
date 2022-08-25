@@ -1,69 +1,85 @@
 package ru.yandex.practicum.fillmorate.service.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.fillmorate.exception.user.UserNotFound;
 import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.user.UserCreateRequest;
 import ru.yandex.practicum.fillmorate.requests.user.UserUpdateRequest;
+import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @Service
 public class UserService {
-    private final Map<Long, User> users;
-    private Long id;
 
-    public UserService() {
-        users = new HashMap<>();
-        id = 1L;
+    UserStorage userStorage;
+
+    @Autowired
+    public UserService(UserStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
     public User createUser(UserCreateRequest request) {
         User user = User.builder()
-                .id(id++)
                 .birthday(request.getBirthday())
                 .email(request.getEmail())
                 .login(request.getLogin())
                 .name(request.getName().isEmpty() ? request.getLogin() : request.getName())
+                .friends(new HashSet<>())
                 .build();
-        users.put(user.getId(), user);
-
-        return user;
+        return userStorage.save(user);
     }
 
     public User updateUser(UserUpdateRequest request) {
-        if (!users.containsKey(request.getId())) {
-            throw new UserNotFound("User with id: " + request.getId() + " is not found");
-        }
-        User user = User.builder()
-                .id(request.getId())
-                .birthday(request.getBirthday())
-                .email(request.getEmail())
-                .login(request.getLogin())
-                .name(request.getName().isEmpty() ? request.getLogin() : request.getName())
-                .build();
-        if (user.getName().isEmpty()) {
-            user.setName(request.getLogin());
-        }
-        users.put(user.getId(), user);
+        User user = userStorage.getById(request.getId());
+        user.setName(request.getName().isEmpty() ? request.getLogin() : request.getName());
+        user.setBirthday(request.getBirthday());
+        user.setEmail(request.getEmail());
+        user.setLogin(request.getLogin());
 
-        return user;
+        return userStorage.update(user);
     }
 
     public List<User> getAll() {
-        return new ArrayList<>(users.values());
+        return userStorage.getAll();
     }
 
-    public String deleteUser(Long id) {
-        if (!users.containsKey(id)) {
-            throw new UserNotFound("User with id: " + id + " is not found");
-        }
-        users.remove(id);
-
-        return "SUCCESS";
+    public User getById(Long id) {
+        return userStorage.getById(id);
     }
+
+    public String addFriend(Long id, Long friendId) {
+
+
+        User user = userStorage.getById(id);
+        User friend = userStorage.getById(friendId);
+        user.getFriends().add(friend);
+        friend.getFriends().add(user);
+
+        return "OK";
+    }
+
+    public String deleteFriend(Long id, Long friendId) {
+        User user = userStorage.getById(id);
+        User friend = userStorage.getById(friendId);
+        user.getFriends().remove(friend);
+        friend.getFriends().remove(user);
+
+        return "OK";
+    }
+
+    public List<User> getFriends(Long id) {
+        return new ArrayList<>(userStorage.getById(id).getFriends());
+    }
+
+    public Set<User> getCommonFriends(Long id, Long otherId) {
+        Set<User> userFriends = userStorage.getById(id).getFriends();
+        Set<User> otherUserFriends = userStorage.getById(otherId).getFriends();
+        userFriends.retainAll(otherUserFriends);
+        return userFriends;
+    }
+
 }
-

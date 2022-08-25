@@ -38,9 +38,23 @@ public class FilmController {
         return ResponseEntity.of(Optional.of(filmService.updateFilm(request)));
     }
 
-
     @GetMapping
     public ResponseEntity<List<Film>> getAllFilm() {
         return ResponseEntity.of(Optional.of(filmService.getAll()));
+    }
+
+    @PutMapping("{id}/like/{userId}")
+    public String addLike(@PathVariable Long id, @PathVariable Long userId) {
+        return filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("{id}/like/{userId}")
+    public String deleteLike(@PathVariable Long id, @PathVariable Long userId) {
+        return filmService.deleteLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<Film>> getPopular(@RequestParam(defaultValue = "10") int count) {
+        return ResponseEntity.of(Optional.of(filmService.getPopular(count)));
     }
 }

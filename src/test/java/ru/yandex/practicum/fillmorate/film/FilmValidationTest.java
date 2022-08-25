@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.fillmorate.controller.film.FilmController;
 import ru.yandex.practicum.fillmorate.model.FilmRequest;
-import ru.yandex.practicum.fillmorate.service.film.FilmService;
+import ru.yandex.practicum.fillmorate.storage.film.InMemoryFilmStorage;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,7 +27,7 @@ public class FilmValidationTest {
     FilmRequest film;
 
     @MockBean
-    FilmService filmService;
+    InMemoryFilmStorage inMemoryFilmStorage;
 
     @Autowired
     MockMvc mockMvc;
