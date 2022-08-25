@@ -10,13 +10,13 @@ import java.time.LocalDate;
 
 @Data
 public class FilmAddRequest {
-    @NotBlank
+    @NotBlank(message = "Name cannot be empty")
     private String name;
-    @Size(max = 200, message = "error size")
+    @Size(max = 200, message = "Description cannot be more than 200 characters")
     private String description;
-    @AfterDate(message = "error date")
+    @AfterDate(message = "Date cannot be before 1895.12.28")
     private LocalDate releaseDate;
-    @Positive
+    @Positive(message = "Duration cannot be negative")
     private Long duration;
 }
 
