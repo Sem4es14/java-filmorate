@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.fillmorate.controller.user.UserController;
 import ru.yandex.practicum.fillmorate.model.UserRequest;
-import ru.yandex.practicum.fillmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.fillmorate.service.user.UserService;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,7 +27,7 @@ public class UserValidationTest {
     UserRequest user;
 
     @MockBean
-    InMemoryUserStorage inMemoryUserStorage;
+    UserService userService;
 
     @Autowired
     MockMvc mockMvc;
