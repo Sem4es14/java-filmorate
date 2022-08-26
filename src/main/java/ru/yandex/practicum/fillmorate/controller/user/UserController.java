@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<List<User>> getFriends(@PathVariable Long id) {
+    public ResponseEntity<Set<User>> getFriends(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getFriends(id)));
     }
 
@@ -64,7 +64,7 @@ public class UserController {
         return ResponseEntity.of(Optional.of(userService.getCommonFriends(id, otherId)));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(userService.getById(id)));
     }

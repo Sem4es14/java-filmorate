@@ -2,7 +2,6 @@ package ru.yandex.practicum.fillmorate.model.film;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.fillmorate.model.user.User;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -15,6 +14,6 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Long duration;
-    private Set<User> likes;
+    private Set<Long> likes;
 }
 

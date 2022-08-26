@@ -49,7 +49,7 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotFound("User with id: " + id + " is not found");
         }
 
-        return users.getOrDefault(id, null);
+        return users.get(id);
     }
 }
 

@@ -12,8 +12,6 @@ import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +43,7 @@ public class FilmService {
                 film.setDuration(request.getDuration());
                 film.setName(request.getName());
                 film.setReleaseDate(request.getReleaseDate());
+
         return filmStorage.update(film);
     }
 
@@ -55,22 +54,30 @@ public class FilmService {
     public String addLike(Long filmId, Long userId) {
         Film film = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
-        film.getLikes().add(user);
+        film.getLikes().add(user.getId());
+
         return "OK";
     }
 
     public String deleteLike(Long filmId, Long userId) {
         Film film = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
-        film.getLikes().remove(user);
+        film.getLikes().remove(user.getId());
+
         return "OK";
     }
 
     public List<Film> getPopular(int count) {
-        Set<Film> films = new TreeSet<>(new LikesComparator());
-        films.addAll(filmStorage.getAll());
+        List<Film> films = filmStorage.getAll();
+        films.sort(new LikesComparator());
+
         return films.stream()
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    public Film getById(Long id) {
+
+        return filmStorage.getById(id);
     }
 }
