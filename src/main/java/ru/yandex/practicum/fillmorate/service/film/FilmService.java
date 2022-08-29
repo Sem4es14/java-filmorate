@@ -2,6 +2,7 @@ package ru.yandex.practicum.fillmorate.service.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.fillmorate.mapper.film.FilmMapper;
 import ru.yandex.practicum.fillmorate.model.film.Film;
 import ru.yandex.practicum.fillmorate.model.film.LikesComparator;
 import ru.yandex.practicum.fillmorate.model.user.User;
@@ -10,7 +11,6 @@ import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
 import ru.yandex.practicum.fillmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +19,7 @@ public class FilmService {
     FilmStorage filmStorage;
     UserStorage userStorage;
 
+
     @Autowired
     public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
@@ -26,13 +27,7 @@ public class FilmService {
     }
 
     public Film addFilm(FilmAddRequest request) {
-        Film film = Film.builder()
-                .description(request.getDescription())
-                .duration(request.getDuration())
-                .name(request.getName())
-                .releaseDate(request.getReleaseDate())
-                .likes(new HashSet<>() )
-                .build();
+        Film film = FilmMapper.INSTANCE.requestToFilm(request);
 
         return filmStorage.save(film);
     }
@@ -51,20 +46,20 @@ public class FilmService {
         return filmStorage.getAll();
     }
 
-    public String addLike(Long filmId, Long userId) {
+    public Film addLike(Long filmId, Long userId) {
         Film film = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
         film.getLikes().add(user.getId());
 
-        return "OK";
+        return film;
     }
 
-    public String deleteLike(Long filmId, Long userId) {
+    public Film deleteLike(Long filmId, Long userId) {
         Film film = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
         film.getLikes().remove(user.getId());
 
-        return "OK";
+        return film;
     }
 
     public List<Film> getPopular(int count) {

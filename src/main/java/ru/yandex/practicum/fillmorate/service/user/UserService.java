@@ -2,12 +2,12 @@ package ru.yandex.practicum.fillmorate.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.fillmorate.mapper.user.UserMapper;
 import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.user.UserCreateRequest;
 import ru.yandex.practicum.fillmorate.requests.user.UserUpdateRequest;
 import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,13 +23,7 @@ public class UserService {
     }
 
     public User createUser(UserCreateRequest request) {
-        User user = User.builder()
-                .birthday(request.getBirthday())
-                .email(request.getEmail())
-                .login(request.getLogin())
-                .name(request.getName().isEmpty() ? request.getLogin() : request.getName())
-                .friends(new HashSet<>())
-                .build();
+        User user = UserMapper.INSTANCE.requestToUser(request);
         return userStorage.save(user);
     }
 
@@ -51,22 +45,22 @@ public class UserService {
         return userStorage.getById(id);
     }
 
-    public String addFriend(Long id, Long friendId) {
+    public User addFriend(Long id, Long friendId) {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
         user.getFriends().add(friendId);
         friend.getFriends().add(id);
 
-        return "OK";
+        return user;
     }
 
-    public String deleteFriend(Long id, Long friendId) {
+    public User deleteFriend(Long id, Long friendId) {
         User user = userStorage.getById(id);
         User friend = userStorage.getById(friendId);
         user.getFriends().remove(friendId);
         friend.getFriends().remove(id);
 
-        return "OK";
+        return user;
     }
 
     public Set<User> getFriends(Long id) {

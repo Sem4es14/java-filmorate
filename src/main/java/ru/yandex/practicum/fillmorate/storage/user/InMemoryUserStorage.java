@@ -19,6 +19,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User save(User user) {
         user.setId(id++);
+        user.setFriends(new HashSet<>());
         users.put(user.getId(), user);
 
         return user;
@@ -37,10 +38,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public String delete(Long id) {
+    public Long delete(Long id) {
+        if (!users.containsKey(id)) {
+            throw new UserNotFound("User with id: " + id + " is not found");
+        }
         users.remove(id);
 
-        return "OK";
+        return id;
     }
 
     @Override

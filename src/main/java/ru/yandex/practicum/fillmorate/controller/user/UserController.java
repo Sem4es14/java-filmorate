@@ -45,13 +45,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public String addFriend(@PathVariable Long id, @PathVariable Long friendId) {
-        return userService.addFriend(id, friendId);
+    public ResponseEntity<User> addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        return ResponseEntity.of(Optional.of(userService.addFriend(id, friendId)));
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public String deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
-        return userService.deleteFriend(id, friendId);
+    public ResponseEntity<User> deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        return ResponseEntity.of(Optional.of(userService.deleteFriend(id, friendId)));
     }
 
     @GetMapping("/{id}/friends")

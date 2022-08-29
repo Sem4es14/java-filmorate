@@ -11,7 +11,7 @@ public interface UserStorage {
 
     List<User> getAll();
 
-    String delete(Long id);
+    Long delete(Long id);
 
     User getById(Long id);
 }

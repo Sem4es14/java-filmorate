@@ -44,13 +44,13 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public String addLike(@PathVariable Long id, @PathVariable Long userId) {
-        return filmService.addLike(id, userId);
+    public ResponseEntity<Film> addLike(@PathVariable Long id, @PathVariable Long userId) {
+        return ResponseEntity.of(Optional.of(filmService.addLike(id, userId)));
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public String deleteLike(@PathVariable Long id, @PathVariable Long userId) {
-        return filmService.deleteLike(id, userId);
+    public ResponseEntity<Film> deleteLike(@PathVariable Long id, @PathVariable Long userId) {
+        return ResponseEntity.of(Optional.of(filmService.deleteLike(id, userId)));
     }
 
     @GetMapping("/popular")

@@ -8,7 +8,7 @@ public interface FilmStorage {
     Film save(Film film);
     Film update(Film film);
     List<Film> getAll();
-    String deleteFilm(Long id);
+    Long deleteFilm(Long id);
 
     Film getById(Long id);
 }

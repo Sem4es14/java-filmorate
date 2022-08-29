@@ -4,10 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
 import ru.yandex.practicum.fillmorate.model.film.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -22,6 +19,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film save(Film film) {
         film.setId(id++);
+        film.setLikes(new HashSet<>());
         films.put(film.getId(), film);
         return film;
     }
@@ -47,13 +45,13 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public String deleteFilm(Long id) {
+    public Long deleteFilm(Long id) {
         if (!films.containsKey(id)) {
-            throw new FilmNotFound("Film with id: " + id + "is not found");
+            throw new FilmNotFound("Film with id: " + id + " is not found");
         }
         films.remove(id);
 
-        return "OK";
+        return id;
     }
 }
 
