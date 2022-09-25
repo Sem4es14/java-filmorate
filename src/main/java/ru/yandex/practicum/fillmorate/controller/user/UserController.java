@@ -12,6 +12,7 @@ import ru.yandex.practicum.fillmorate.service.user.UserService;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -38,9 +39,33 @@ public class UserController {
         return ResponseEntity.of(Optional.of(userService.updateUser(request)));
     }
 
-
     @GetMapping
     public ResponseEntity<List<User>> getAllUser() {
         return ResponseEntity.of(Optional.of(userService.getAll()));
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<User> addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        return ResponseEntity.of(Optional.of(userService.addFriend(id, friendId)));
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<User> deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        return ResponseEntity.of(Optional.of(userService.deleteFriend(id, friendId)));
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<Set<User>> getFriends(@PathVariable Long id) {
+        return ResponseEntity.of(Optional.of(userService.getFriends(id)));
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<Set<User>> getFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return ResponseEntity.of(Optional.of(userService.getCommonFriends(id, otherId)));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@PathVariable Long id) {
+        return ResponseEntity.of(Optional.of(userService.getById(id)));
     }
 }

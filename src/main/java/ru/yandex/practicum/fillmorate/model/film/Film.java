@@ -3,8 +3,8 @@ package ru.yandex.practicum.fillmorate.model.film;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
@@ -14,5 +14,6 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Long duration;
+    private Set<Long> likes;
 }
 
