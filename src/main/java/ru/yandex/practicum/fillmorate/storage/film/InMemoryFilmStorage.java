@@ -1,12 +1,16 @@
 package ru.yandex.practicum.fillmorate.storage.film;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
 import ru.yandex.practicum.fillmorate.model.film.Film;
+import ru.yandex.practicum.fillmorate.model.genre.Genre;
+import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 
 import java.util.*;
 
 @Component
+
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films;
     private Long id;
@@ -42,6 +46,26 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new FilmNotFound("Film with id: " + id + " is not found");
         }
         return films.get(id);
+    }
+
+    @Override
+    public List<Mpa> getMpas() {
+        return null;
+    }
+
+    @Override
+    public Mpa getMpaById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<Genre> getAllGenres() {
+        return null;
+    }
+
+    @Override
+    public Genre getGenreById(Long id) {
+        return null;
     }
 
     @Override

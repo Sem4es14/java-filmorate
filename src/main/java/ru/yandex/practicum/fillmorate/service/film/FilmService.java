@@ -1,10 +1,13 @@
 package ru.yandex.practicum.fillmorate.service.film;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.fillmorate.mapper.film.FilmMapper;
 import ru.yandex.practicum.fillmorate.model.film.Film;
 import ru.yandex.practicum.fillmorate.model.film.LikesComparator;
+import ru.yandex.practicum.fillmorate.model.genre.Genre;
+import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
@@ -38,6 +41,8 @@ public class FilmService {
                 film.setDuration(request.getDuration());
                 film.setName(request.getName());
                 film.setReleaseDate(request.getReleaseDate());
+                film.setGenres(request.getGenres());
+                film.setMpa(request.getMpa());
 
         return filmStorage.update(film);
     }
@@ -74,5 +79,25 @@ public class FilmService {
     public Film getById(Long id) {
 
         return filmStorage.getById(id);
+    }
+
+    public List<Mpa> getMpas() {
+
+        return filmStorage.getMpas();
+    }
+
+    public Mpa getMpaById(Long id) {
+
+        return filmStorage.getMpaById(id);
+    }
+
+    public List<Genre> getGenres() {
+
+        return filmStorage.getAllGenres();
+    }
+
+    public Genre getGenreById(Long id) {
+
+        return filmStorage.getGenreById(id);
     }
 }

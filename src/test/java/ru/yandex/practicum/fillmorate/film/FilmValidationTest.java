@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.fillmorate.controller.film.FilmController;
 import ru.yandex.practicum.fillmorate.model.FilmRequest;
+import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.service.film.FilmService;
 
 import static org.hamcrest.Matchers.containsString;
@@ -39,6 +40,7 @@ public class FilmValidationTest {
                 .description("nice nice")
                 .duration(125)
                 .releaseDate("2013-10-10")
+                .mpa(Mpa.builder().id(1L).build())
                 .build();
     }
 

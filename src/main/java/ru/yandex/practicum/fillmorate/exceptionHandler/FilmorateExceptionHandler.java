@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yandex.practicum.fillmorate.exception.ExceptionDTO;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
+import ru.yandex.practicum.fillmorate.exception.film.GenreNotFound;
+import ru.yandex.practicum.fillmorate.exception.film.MpaNotFound;
 import ru.yandex.practicum.fillmorate.exception.user.UserNotFound;
 
 import java.time.LocalDateTime;
@@ -34,4 +36,15 @@ public class FilmorateExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = GenreNotFound.class)
+    public ResponseEntity<ExceptionDTO> genreNotFound(GenreNotFound e) {
+        return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = MpaNotFound.class)
+    public ResponseEntity<ExceptionDTO> mpaNotFound(MpaNotFound e) {
+        return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()),
+                HttpStatus.NOT_FOUND);
+    }
 }
