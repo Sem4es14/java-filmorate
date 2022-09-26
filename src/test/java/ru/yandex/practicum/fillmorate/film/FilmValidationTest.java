@@ -44,7 +44,10 @@ public class FilmValidationTest {
                 .description("nice nice")
                 .duration(125)
                 .releaseDate("2013-10-10")
-                .mpa(Mpa.builder().id(1L).build())
+                .mpa(Mpa.builder()
+                        .id(1L)
+                        .name("G")
+                        .build())
                 .build();
     }
 
