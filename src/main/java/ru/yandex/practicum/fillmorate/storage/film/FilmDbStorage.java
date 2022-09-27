@@ -34,7 +34,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film save(Film film) {
-        String sqlQueryFilm = "INSERT INTO films(name, description, release_date, duration, mpa_id) " +
+        String sqlQueryFilm = "INSERT INTO films(name, description, release, duration, mpa_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -60,7 +60,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film update(Film film) {
         String updateFilmQuery = "UPDATE films SET " +
-                "name = ?, description = ?, release_date = ?,  duration = ?, mpa_id = ? " +
+                "name = ?, description = ?, release = ?,  duration = ?, mpa_id = ? " +
                 "WHERE id = ?";
         int status = jdbcTemplate.update(updateFilmQuery,
                 film.getName(),
@@ -188,7 +188,7 @@ public class FilmDbStorage implements FilmStorage {
                 .id(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
-                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .releaseDate(resultSet.getDate("release").toLocalDate())
                 .duration(resultSet.getLong("duration"))
                 .mpa(jdbcTemplate.queryForObject(sql, this::mapRowToMpa, resultSet.getLong("id")))
                 .genres(getGenres(resultSet.getLong("id")))
