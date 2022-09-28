@@ -42,7 +42,7 @@ public class FilmService {
                 film.setName(request.getName());
                 film.setReleaseDate(request.getReleaseDate());
                 film.setGenres(request.getGenres());
-                film.setMpa(new Mpa(request.getMpa().getId(), ""));
+                film.setMpa(request.getMpa());
 
         return filmStorage.update(film);
     }

@@ -8,5 +8,5 @@ import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 @Mapper(componentModel = "spring")
 public interface FilmMapper {
     FilmMapper INSTANCE = Mappers.getMapper(FilmMapper.class);
-    Film  requestToFilm(FilmAddRequest request);
+    Film requestToFilm(FilmAddRequest request);
 }
