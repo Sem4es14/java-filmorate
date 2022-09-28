@@ -38,16 +38,6 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Long delete(Long id) {
-        if (!users.containsKey(id)) {
-            throw new UserNotFound("User with id: " + id + " is not found");
-        }
-        users.remove(id);
-
-        return id;
-    }
-
-    @Override
     public User getById(Long id) {
         if (!users.containsKey(id)) {
             throw new UserNotFound("User with id: " + id + " is not found");

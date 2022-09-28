@@ -1,6 +1,5 @@
 package ru.yandex.practicum.fillmorate.storage.film;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
 import ru.yandex.practicum.fillmorate.model.film.Film;
@@ -68,15 +67,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         return null;
     }
 
-    @Override
-    public Long deleteFilm(Long id) {
-        if (!films.containsKey(id)) {
-            throw new FilmNotFound("Film with id: " + id + " is not found");
-        }
-        films.remove(id);
-
-        return id;
-    }
 }
 
 

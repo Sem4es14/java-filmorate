@@ -50,9 +50,4 @@ public class FilmorateExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
-    public  ResponseEntity<ExceptionDTO> handleThrowable(final Throwable e) {
-        log.info("Error {}", e.getMessage(), e);
-        return new ResponseEntity<>(new ExceptionDTO(e.getMessage(), LocalDateTime.now()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

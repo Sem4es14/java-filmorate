@@ -6,9 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
 import ru.yandex.practicum.fillmorate.exception.user.UserNotFound;
-import ru.yandex.practicum.fillmorate.model.film.Film;
 import ru.yandex.practicum.fillmorate.model.user.User;
 
 import java.sql.Date;
@@ -76,11 +74,6 @@ public class UserDbStorage implements UserStorage{
         String sql = "SELECT * FROM users;";
 
         return jdbcTemplate.query(sql, this::mapRowToUser);
-    }
-
-    @Override
-    public Long delete(Long id) {
-        return null;
     }
 
     @Override

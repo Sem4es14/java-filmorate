@@ -22,12 +22,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/*@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@WebMvcTest(UserController.class)*/
+@WebMvcTest(UserController.class)
 public class UserValidationTest {
-   /* Gson gson = new Gson();
+    Gson gson = new Gson();
     UserRequest user;
 
     @MockBean
@@ -96,5 +96,5 @@ public class UserValidationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("Birthday cannot be in future")));
 
-    }*/
+    }
 }
