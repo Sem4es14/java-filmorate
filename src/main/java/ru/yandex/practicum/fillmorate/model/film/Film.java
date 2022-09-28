@@ -5,10 +5,7 @@ import lombok.Data;
 import ru.yandex.practicum.fillmorate.model.genre.Genre;
 import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 
-import javax.persistence.Column;
-import java.awt.geom.GeneralPath;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Data
