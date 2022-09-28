@@ -1,13 +1,14 @@
-package ru.yandex.practicum.fillmorate.model.mpa;
+package ru.yandex.practicum.fillmorate.requests.film;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class Mpa {
+@NoArgsConstructor
+public class MpaRequest {
     private Long id;
-    private String name;
 }

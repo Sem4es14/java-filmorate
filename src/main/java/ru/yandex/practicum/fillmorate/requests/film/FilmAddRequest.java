@@ -2,7 +2,6 @@ package ru.yandex.practicum.fillmorate.requests.film;
 
 import lombok.Data;
 import ru.yandex.practicum.fillmorate.model.genre.Genre;
-import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.requests.validation.AfterDate;
 
 import javax.validation.constraints.NotBlank;
@@ -24,6 +23,6 @@ public class FilmAddRequest {
     private Long duration;
     private Set<Genre> genres;
     @NotNull(message = "mpa cannot be null")
-    private Mpa mpa;
+    private MpaRequest mpa;
 }
 
