@@ -36,6 +36,7 @@ public class FilmDbStorage implements FilmStorage {
     public Film save(Film film) {
         String sqlQueryFilm = "INSERT INTO films(name, description, release, duration, mpa_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
+        Mpa mpa = getMpaById(film.getMpa().getId());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryFilm, new String[]{"id"});
