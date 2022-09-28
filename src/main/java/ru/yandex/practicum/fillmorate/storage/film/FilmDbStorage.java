@@ -36,7 +36,16 @@ public class FilmDbStorage implements FilmStorage {
     public Film save(Film film) {
         String sqlQueryFilm = "INSERT INTO films(name, description, release, duration, mpa_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        Mpa mpa = getMpaById(film.getMpa().getId());
+        if (film.getLikes() == null) {
+            film.setLikes(new HashSet<>());
+        }
+        if (film.getGenres() == null) {
+            film.setGenres(new HashSet<>());
+        }
+        getMpaById(film.getMpa().getId());
+        for (Genre genre : film.getGenres()) {
+            getGenreById(genre.getId());
+        }
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryFilm, new String[]{"id"});
@@ -48,12 +57,6 @@ public class FilmDbStorage implements FilmStorage {
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
-        if (film.getGenres() == null) {
-            film.setGenres(new HashSet<>());
-        }
 
         return addGenres(film);
     }
@@ -63,6 +66,16 @@ public class FilmDbStorage implements FilmStorage {
         String updateFilmQuery = "UPDATE films SET " +
                 "name = ?, description = ?, release = ?,  duration = ?, mpa_id = ? " +
                 "WHERE id = ?";
+        if (film.getLikes() == null) {
+            film.setLikes(new HashSet<>());
+        }
+        if (film.getGenres() == null) {
+            film.setGenres(new HashSet<>());
+        }
+        getMpaById(film.getMpa().getId());
+        for (Genre genre : film.getGenres()) {
+            getGenreById(genre.getId());
+        }
         int status = jdbcTemplate.update(updateFilmQuery,
                 film.getName(),
                 film.getDescription(),
@@ -74,13 +87,6 @@ public class FilmDbStorage implements FilmStorage {
 
         String deleteGenresQuery = "DELETE FROM genres_films WHERE film_id = ?";
         jdbcTemplate.update(deleteGenresQuery, film.getId());
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
-        if (film.getGenres() == null) {
-            film.setGenres(new HashSet<>());
-        }
-
         if (status == 1) return addGenres(film);
         throw new FilmNotFound("Film with id " + film.getId() + " not found");
     }
