@@ -90,7 +90,7 @@ public class FilmDbStorage implements FilmStorage {
         throw new FilmNotFound("Film with id " + film.getId() + " not found");
     }
 
-    public Film addGenres(Film film) {
+    private Film addGenres(Film film) {
         String sqlQueryGenres = "INSERT INTO genres_films(film_id, genre_id) " +
                 "VALUES (?, ?) ";
         for (Genre genre : film.getGenres()) {
@@ -158,7 +158,7 @@ public class FilmDbStorage implements FilmStorage {
             return jdbcTemplate.queryForObject(getGenreByIdQuery, this::mapRowToGenre, id);
         } catch (EmptyResultDataAccessException e) {
         throw new GenreNotFound("Genre with id: " + id + " is not found.");
-    }
+        }
     }
 
     private List<Long> getLikes (Long id) {
