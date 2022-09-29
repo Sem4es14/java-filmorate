@@ -13,11 +13,4 @@ public interface FilmStorage {
 
     Film getById(Long id);
 
-    List<Mpa> getMpas();
-
-    Mpa getMpaById(Long id);
-
-    List<Genre> getAllGenres();
-
-    Genre getGenreById(Long id);
 }

@@ -47,25 +47,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
-    @Override
-    public List<Mpa> getMpas() {
-        return null;
-    }
 
-    @Override
-    public Mpa getMpaById(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<Genre> getAllGenres() {
-        return null;
-    }
-
-    @Override
-    public Genre getGenreById(Long id) {
-        return null;
-    }
 
 }
 

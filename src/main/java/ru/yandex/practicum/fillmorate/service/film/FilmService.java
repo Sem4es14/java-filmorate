@@ -11,6 +11,8 @@ import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
 import ru.yandex.practicum.fillmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.fillmorate.storage.genre.GenreDbStorage;
+import ru.yandex.practicum.fillmorate.storage.mpa.MpaDbStorage;
 import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -18,14 +20,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    FilmStorage filmStorage;
-    UserStorage userStorage;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private final MpaDbStorage mpaDbStorage;
+    private final GenreDbStorage genreDbStorage;
+
 
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, MpaDbStorage mpaDbStorage, GenreDbStorage genreDbStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.mpaDbStorage = mpaDbStorage;
+        this.genreDbStorage = genreDbStorage;
     }
 
     public Film addFilm(FilmAddRequest request) {
@@ -82,21 +89,21 @@ public class FilmService {
 
     public List<Mpa> getMpas() {
 
-        return filmStorage.getMpas();
+        return mpaDbStorage.getMpas();
     }
 
     public Mpa getMpaById(Long id) {
 
-        return filmStorage.getMpaById(id);
+        return mpaDbStorage.getMpaById(id);
     }
 
     public List<Genre> getGenres() {
 
-        return filmStorage.getAllGenres();
+        return genreDbStorage.getAllGenres();
     }
 
     public Genre getGenreById(Long id) {
 
-        return filmStorage.getGenreById(id);
+        return genreDbStorage.getGenreById(id);
     }
 }

@@ -9,7 +9,8 @@ import ru.yandex.practicum.fillmorate.model.genre.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class GenreDbStorage {
@@ -19,10 +20,10 @@ public class GenreDbStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Genre> getGenreByFilm(Film film) {
+    public Set<Genre> getGenreByFilm(Long filmId) {
         String getGenresQuery = "SELECT * FROM genres_films WHERE film_id = ?";
 
-        return jdbcTemplate.query(getGenresQuery, this::mapRowToGenre, film.getId());
+        return new HashSet<>(jdbcTemplate.query(getGenresQuery, this::mapRowToGenre, filmId));
     }
 
     public Genre getGenreById(Long id) {
@@ -40,16 +41,26 @@ public class GenreDbStorage {
         return jdbcTemplate.query(getGenresQuery, this::mapRowToGenre);
     }
 
-    public Long saveGenreByFilm(Film film) {
+    public int saveGenreByFilm(Film film) {
         if (film.getGenres() == null) {
-            return film.getId();
+            return 0;
         }
 
         String deleteGenresQuery = "DELETE FROM genres_films WHERE film_id = ?";
         jdbcTemplate.update(deleteGenresQuery, film.getId());
+        String values = String.join(",", Collections.nCopies(film.getGenres().size(), "?"));
+        String saveGenresQuery = "INSERT INTO genres_films (film_id, genre_id) " +
+                "(SELECT f.id, g.id " +
+                "FROM films AS f " +
+                "JOIN genres AS g ON f.id = ? " +
+                "WHERE g.id IN (" + values + "))";
+        List<Long> ids = new ArrayList<>();
+        ids.add(film.getId());
+        ids.addAll(film.getGenres().stream()
+                .map(Genre::getId)
+                .collect(Collectors.toList()));
 
-        String saveGenresQuery = "INSERT INTO genres_films (film_id, genre_id) (SELECT id FROM GENRES WHERE";
-        return null;
+        return jdbcTemplate.update(saveGenresQuery, ids.toArray());
     }
 
     private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
@@ -58,4 +69,5 @@ public class GenreDbStorage {
                 .name(resultSet.getString("name"))
                 .build();
     }
+
 }
