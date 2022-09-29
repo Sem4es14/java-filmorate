@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.fillmorate.exception.user.UserNotFound;
 import ru.yandex.practicum.fillmorate.model.user.User;
+import ru.yandex.practicum.fillmorate.storage.friend.FriendDbStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -20,9 +21,11 @@ import java.util.List;
 @Primary
 public class UserDbStorage implements UserStorage{
     private final JdbcTemplate jdbcTemplate;
+    private final FriendDbStorage friendStorage;
 
-    public UserDbStorage(JdbcTemplate jdbcTemplate) {
+    public UserDbStorage(JdbcTemplate jdbcTemplate, FriendDbStorage friendStorage) {
         this.jdbcTemplate = jdbcTemplate;
+        this.friendStorage = friendStorage;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class UserDbStorage implements UserStorage{
         user.setId(keyHolder.getKey().longValue());
         user.setFriends(new HashSet<>());
 
-        return addFriends(user);
+        return getById(user.getId());
     }
 
     @Override
@@ -61,11 +64,9 @@ public class UserDbStorage implements UserStorage{
                 user.getId()
         );
 
-        String deleteGenresQuery = "DELETE FROM friends WHERE user_id = ?";
-        jdbcTemplate.update(deleteGenresQuery, user.getId());
-
-        if (status == 1) return addFriends(user);
-
+        if (status == 1) {
+            return getById(user.getId());
+        }
         throw new UserNotFound("User with id " + user.getId() + " not found");
     }
 
@@ -87,29 +88,6 @@ public class UserDbStorage implements UserStorage{
 
     }
 
-    private User addFriends(User user) {
-        String sqlQueryfriends = "INSERT INTO friends (user_id, friend_id) " +
-                "VALUES (?, ?)";
-        for (Long friendId : user.getFriends()) {
-            jdbcTemplate.update(sqlQueryfriends,
-                    user.getId(),
-                    friendId
-            );
-        }
-
-        return getById(user.getId());
-    }
-
-    private List<Long> getFriends(Long user_id){
-        String getFriendsQuery = "SELECT * FROM friends WHERE user_id = ?";
-
-        return jdbcTemplate.query(getFriendsQuery, this::mapRowToUserFriends, user_id);
-    }
-    private Long mapRowToUserFriends(ResultSet resultSet, int rowNum) throws SQLException {
-
-        return resultSet.getLong("friend_id");
-    }
-
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return User.builder()
                 .id(resultSet.getLong("id"))
@@ -117,7 +95,7 @@ public class UserDbStorage implements UserStorage{
                 .login(resultSet.getString("login"))
                 .email(resultSet.getString("email"))
                 .birthday(resultSet.getDate("birthday").toLocalDate())
-                .friends(new HashSet<>(getFriends(resultSet.getLong("id"))))
+                .friends(friendStorage.getFriendsIds(resultSet.getLong("id")))
                 .build();
     }
 }

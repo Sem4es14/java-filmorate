@@ -20,8 +20,11 @@ public class GenreDbStorage {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Set<Genre> getGenreByFilm(Long filmId) {
-        String getGenresQuery = "SELECT * FROM genres_films WHERE film_id = ?";
+    public Set<Genre> getGenreByFilmId(Long filmId) {
+        String getGenresQuery = "SELECT * FROM genres AS g" +
+                " JOIN genres_films AS gf ON gf.genre_id = g.id" +
+                " WHERE film_id = ? " +
+                "ORDER BY id ASC";
 
         return new HashSet<>(jdbcTemplate.query(getGenresQuery, this::mapRowToGenre, filmId));
     }
@@ -43,6 +46,7 @@ public class GenreDbStorage {
 
     public int saveGenreByFilm(Film film) {
         if (film.getGenres() == null) {
+
             return 0;
         }
 
@@ -69,5 +73,4 @@ public class GenreDbStorage {
                 .name(resultSet.getString("name"))
                 .build();
     }
-
 }

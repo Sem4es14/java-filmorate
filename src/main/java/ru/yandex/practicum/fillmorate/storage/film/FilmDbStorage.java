@@ -7,11 +7,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
-import ru.yandex.practicum.fillmorate.exception.film.MpaNotFound;
 import ru.yandex.practicum.fillmorate.model.film.Film;
-import ru.yandex.practicum.fillmorate.model.genre.Genre;
-import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.storage.genre.GenreDbStorage;
+import ru.yandex.practicum.fillmorate.storage.like.LikeDbStorage;
 import ru.yandex.practicum.fillmorate.storage.mpa.MpaDbStorage;
 
 import java.sql.Date;
@@ -28,22 +26,20 @@ public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreDbStorage genreDbStorage;
     private final MpaDbStorage mpaDbStorage;
+    private final LikeDbStorage likeStorage;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, GenreDbStorage genreDbStorage, MpaDbStorage mpaDbStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, GenreDbStorage genreDbStorage, MpaDbStorage mpaDbStorage, LikeDbStorage likeStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.genreDbStorage = genreDbStorage;
         this.mpaDbStorage = mpaDbStorage;
+        this.likeStorage = likeStorage;
     }
 
     @Override
     public Film save(Film film) {
         String sqlQueryFilm = "INSERT INTO films(name, description, release, duration, mpa_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
         mpaDbStorage.getMpaById(film.getMpa().getId());
-        genreDbStorage.saveGenreByFilm(film);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQueryFilm, new String[]{"id"});
@@ -55,6 +51,7 @@ public class FilmDbStorage implements FilmStorage {
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
+        genreDbStorage.saveGenreByFilm(film);
 
         return getById(film.getId());
     }
@@ -64,12 +61,6 @@ public class FilmDbStorage implements FilmStorage {
         String updateFilmQuery = "UPDATE films SET " +
                 "name = ?, description = ?, release = ?,  duration = ?, mpa_id = ? " +
                 "WHERE id = ?";
-        if (film.getLikes() == null) {
-            film.setLikes(new HashSet<>());
-        }
-        if (film.getGenres() == null) {
-            film.setGenres(new HashSet<>());
-        }
         mpaDbStorage.getMpaById(film.getMpa().getId());
         genreDbStorage.saveGenreByFilm(film);
         int status = jdbcTemplate.update(updateFilmQuery,
@@ -81,7 +72,9 @@ public class FilmDbStorage implements FilmStorage {
                 film.getId()
         );
 
-        if (status == 1) return getById(film.getId());
+        if (status == 1) {
+            return getById(film.getId());
+        }
         throw new FilmNotFound("Film with id " + film.getId() + " not found");
     }
 
@@ -92,36 +85,30 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sql, this::mapRowToFilm);
     }
 
-
     @Override
     public Film getById(Long id) {
         String getFilmQuery = "SELECT * FROM films WHERE id = ?;";
-        Film film;
         try {
-            film = jdbcTemplate.queryForObject(getFilmQuery, this::mapRowToFilm, id);
+
+            return jdbcTemplate.queryForObject(getFilmQuery, this::mapRowToFilm, id);
         } catch (EmptyResultDataAccessException e) {
-            throw  new FilmNotFound("Film with id " + id + " not found");
+            throw new FilmNotFound("Film with id " + id + " not found");
         }
-
-        return film;
     }
 
-    private List<Long> getLikes (Long id) {
-        String getLikesQuery = "SELECT l.user_id FROM likes AS l " +
-                "JOIN films AS f ON l.film_id = f.id " +
-                "WHERE l.user_id = ? ORDER BY l.user_id ";
+    @Override
+    public List<Film> getPopular(int count) {
+        String sql = "SELECT F.ID, F.NAME, F.DESCRIPTION, F.RELEASE, F.DURATION, F.MPA_ID " +
+                "FROM FILMS AS F " +
+                "LEFT JOIN LIKES L on F.ID = L.FILM_ID " +
+                "GROUP BY F.ID " +
+                "ORDER BY COUNT(DISTINCT (L.USER_ID)) DESC " +
+                "LIMIT ? ";
 
-        return jdbcTemplate.query(getLikesQuery, this::mapRowToUserLike, id);
-    }
-
-    private Long mapRowToUserLike (ResultSet resultSet, int rowNum) throws SQLException {
-        return resultSet.getLong("user_id");
+        return jdbcTemplate.query(sql, this::mapRowToFilm, count);
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        String sql = "SELECT * FROM mpa AS m " +
-                "JOIN films AS f ON m.id = f.mpa_id " +
-                "WHERE f.id = ?";
 
         return Film.builder()
                 .id(resultSet.getLong("id"))
@@ -130,11 +117,8 @@ public class FilmDbStorage implements FilmStorage {
                 .releaseDate(resultSet.getDate("release").toLocalDate())
                 .duration(resultSet.getLong("duration"))
                 .mpa(mpaDbStorage.getMpaById(resultSet.getLong("mpa_id")))
-                .genres(genreDbStorage.getGenreByFilm(resultSet.getLong("id")))
-                .likes(new HashSet<>(getLikes(resultSet.getLong("id"))))
+                .genres(genreDbStorage.getGenreByFilmId(resultSet.getLong("id")))
+                .likes(new HashSet<>(likeStorage.getLikes(resultSet.getLong("id"))))
                 .build();
     }
-
-
-
 }

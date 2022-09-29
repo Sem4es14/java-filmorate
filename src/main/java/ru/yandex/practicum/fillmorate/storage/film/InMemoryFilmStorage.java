@@ -3,13 +3,10 @@ package ru.yandex.practicum.fillmorate.storage.film;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.fillmorate.exception.film.FilmNotFound;
 import ru.yandex.practicum.fillmorate.model.film.Film;
-import ru.yandex.practicum.fillmorate.model.genre.Genre;
-import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 
 import java.util.*;
 
 @Component
-
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films;
     private Long id;
@@ -47,6 +44,10 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
+    @Override
+    public List<Film> getPopular(int count) {
+        return null;
+    }
 
 
 }

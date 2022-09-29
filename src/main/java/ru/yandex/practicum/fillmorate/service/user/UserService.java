@@ -6,8 +6,10 @@ import ru.yandex.practicum.fillmorate.mapper.user.UserMapper;
 import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.user.UserCreateRequest;
 import ru.yandex.practicum.fillmorate.requests.user.UserUpdateRequest;
+import ru.yandex.practicum.fillmorate.storage.friend.FriendDbStorage;
 import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
+import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,11 +17,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    UserStorage userStorage;
+    private final UserStorage userStorage;
+    private final FriendDbStorage friendStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendDbStorage friendStorage) {
         this.userStorage = userStorage;
+        this.friendStorage = friendStorage;
     }
 
     public User createUser(UserCreateRequest request) {
@@ -46,33 +50,31 @@ public class UserService {
     }
 
     public User addFriend(Long id, Long friendId) {
-        User friend = userStorage.getById(friendId);
-        User user = userStorage.getById(id);
-        user.getFriends().add(friendId);
 
-        return userStorage.update(user);
+        return friendStorage.addFriend(
+                userStorage.getById(id),
+                userStorage.getById(friendId)
+        );
     }
 
     public User deleteFriend(Long id, Long friendId) {
-        User friend = userStorage.getById(friendId);
-        User user = userStorage.getById(id);
-        user.getFriends().remove(friendId);
 
-        return userStorage.update(user);
+        return friendStorage.deleteFriend(
+                userStorage.getById(id),
+                userStorage.getById(friendId)
+        );
     }
 
     public Set<User> getFriends(Long id) {
 
-        return userStorage.getById(id).getFriends().stream()
-                .map(friendId -> userStorage.getById(friendId))
-                .collect(Collectors.toSet());
+        return friendStorage.getFriends(userStorage.getById(id));
     }
 
     public Set<User> getCommonFriends(Long id, Long otherId) {
 
-        return userStorage.getById(id).getFriends().stream()
-                .filter(userId -> userStorage.getById(otherId).getFriends().contains(userId))
-                .map(friendId -> userStorage.getById(friendId))
-                .collect(Collectors.toSet());
+        return friendStorage.getCommonFriends(
+                userStorage.getById(id),
+                userStorage.getById(otherId)
+        );
     }
 }

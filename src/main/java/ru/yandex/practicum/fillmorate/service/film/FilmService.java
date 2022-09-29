@@ -5,14 +5,10 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.fillmorate.mapper.film.FilmMapper;
 import ru.yandex.practicum.fillmorate.model.film.Film;
 import ru.yandex.practicum.fillmorate.model.film.LikesComparator;
-import ru.yandex.practicum.fillmorate.model.genre.Genre;
-import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
-import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
 import ru.yandex.practicum.fillmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.fillmorate.storage.genre.GenreDbStorage;
-import ru.yandex.practicum.fillmorate.storage.mpa.MpaDbStorage;
+import ru.yandex.practicum.fillmorate.storage.like.LikeDbStorage;
 import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -22,17 +18,13 @@ import java.util.stream.Collectors;
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-    private final MpaDbStorage mpaDbStorage;
-    private final GenreDbStorage genreDbStorage;
-
-
+    private final LikeDbStorage likeStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage, MpaDbStorage mpaDbStorage, GenreDbStorage genreDbStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, LikeDbStorage likeDbStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
-        this.mpaDbStorage = mpaDbStorage;
-        this.genreDbStorage = genreDbStorage;
+        this.likeStorage = likeDbStorage;
     }
 
     public Film addFilm(FilmAddRequest request) {
@@ -58,19 +50,18 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
-        Film film = filmStorage.getById(filmId);
-        User user = userStorage.getById(userId);
-        film.getLikes().add(user.getId());
 
-        return film;
+        return likeStorage.addLike(
+                filmStorage.getById(filmId),
+                userStorage.getById(userId)
+        );
     }
 
     public Film deleteLike(Long filmId, Long userId) {
-        Film film = filmStorage.getById(filmId);
-        User user = userStorage.getById(userId);
-        film.getLikes().remove(user.getId());
-
-        return film;
+        return likeStorage.deleteLike(
+                filmStorage.getById(filmId),
+                userStorage.getById(userId)
+        );
     }
 
     public List<Film> getPopular(int count) {
@@ -85,25 +76,5 @@ public class FilmService {
     public Film getById(Long id) {
 
         return filmStorage.getById(id);
-    }
-
-    public List<Mpa> getMpas() {
-
-        return mpaDbStorage.getMpas();
-    }
-
-    public Mpa getMpaById(Long id) {
-
-        return mpaDbStorage.getMpaById(id);
-    }
-
-    public List<Genre> getGenres() {
-
-        return genreDbStorage.getAllGenres();
-    }
-
-    public Genre getGenreById(Long id) {
-
-        return genreDbStorage.getGenreById(id);
     }
 }

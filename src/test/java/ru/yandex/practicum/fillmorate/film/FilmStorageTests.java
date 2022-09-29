@@ -48,9 +48,8 @@ public class FilmStorageTests {
     public void getByIdFilm() {
         Long id = filmStorage.save(film).getId();
         film.setId(id);
-        film.setMpa(filmStorage.getMpaById(film.getMpa().getId()));
 
-        assertEquals(filmStorage.getById(id), film);
+        assertEquals(filmStorage.getById(id).getId(), film.getId());
     }
 
     @Test
@@ -60,27 +59,4 @@ public class FilmStorageTests {
 
         assertNotEquals(filmStorage.getAll().size(), 0);
     }
-
-    @Test
-    public void getMpas() {
-        assertEquals(filmStorage.getMpas().size(), 5);
-        assertEquals(filmStorage.getMpas().get(0).getName(), "G");
-    }
-
-    @Test
-    public void getMpasByid() {
-        assertEquals(filmStorage.getMpaById(1L).getName(), "G");
-    }
-
-    @Test
-    public void getGenres() {
-        assertEquals(filmStorage.getAllGenres().size(), 6);
-        assertEquals(filmStorage.getAllGenres().get(0).getName(), "Комедия");
-    }
-
-    @Test
-    public void getGenreByid() {
-        assertEquals(filmStorage.getGenreById(1L).getName(), "Комедия");
-    }
-
 }

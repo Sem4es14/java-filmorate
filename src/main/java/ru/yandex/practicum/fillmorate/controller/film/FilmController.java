@@ -5,14 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.fillmorate.model.film.Film;
-import ru.yandex.practicum.fillmorate.model.genre.Genre;
-import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
 import ru.yandex.practicum.fillmorate.service.film.FilmService;
 
 import javax.validation.Valid;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,24 +60,5 @@ public class FilmController {
     @GetMapping("/films/{id}")
     public ResponseEntity<Film> getById(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(filmService.getById(id)));
-    }
-
-    @GetMapping("/mpa")
-    public ResponseEntity<List<Mpa>> getMpas() {
-        return ResponseEntity.of(Optional.of(filmService.getMpas()));
-    }
-
-    @GetMapping("/mpa/{id}")
-    public ResponseEntity<Mpa> getMpaById(@PathVariable Long id) {
-        return ResponseEntity.of(Optional.of(filmService.getMpaById(id)));
-    }
-    @GetMapping("/genres")
-    public ResponseEntity<List<Genre>> getGenres() {
-        return ResponseEntity.of(Optional.of(filmService.getGenres()));
-    }
-
-    @GetMapping("/genres/{id}")
-    public ResponseEntity<Genre> getGenreById(@PathVariable Long id) {
-        return ResponseEntity.of(Optional.of(filmService.getGenreById(id)));
     }
 }
