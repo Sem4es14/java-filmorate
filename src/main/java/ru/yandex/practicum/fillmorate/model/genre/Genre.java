@@ -1,13 +1,15 @@
-package ru.yandex.practicum.fillmorate.requests.user;
+package ru.yandex.practicum.fillmorate.model.genre;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateRequest extends UserCreateRequest {
+public class Genre {
     private Long id;
+    private String name;
 }
-

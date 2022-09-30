@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/films")
 public class FilmController {
     private final FilmService filmService;
 
@@ -24,41 +23,41 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @PostMapping
+    @PostMapping("/films")
     public ResponseEntity<Film> addFilm(@Valid @RequestBody FilmAddRequest request) {
         log.info("Request to add film: " + request);
 
         return ResponseEntity.of(Optional.of(filmService.addFilm(request)));
     }
 
-    @PutMapping
+    @PutMapping("/films")
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody FilmUpdateRequest request) {
         log.info("Request to update film: " + request);
 
         return ResponseEntity.of(Optional.of(filmService.updateFilm(request)));
     }
 
-    @GetMapping
+    @GetMapping("/films")
     public ResponseEntity<List<Film>> getAllFilm() {
         return ResponseEntity.of(Optional.of(filmService.getAll()));
     }
 
-    @PutMapping("/{id}/like/{userId}")
+    @PutMapping("/films/{id}/like/{userId}")
     public ResponseEntity<Film> addLike(@PathVariable Long id, @PathVariable Long userId) {
         return ResponseEntity.of(Optional.of(filmService.addLike(id, userId)));
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping("/films/{id}/like/{userId}")
     public ResponseEntity<Film> deleteLike(@PathVariable Long id, @PathVariable Long userId) {
         return ResponseEntity.of(Optional.of(filmService.deleteLike(id, userId)));
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/films/popular")
     public ResponseEntity<List<Film>> getPopular(@RequestParam(defaultValue = "10") int count) {
         return ResponseEntity.of(Optional.of(filmService.getPopular(count)));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/films/{id}")
     public ResponseEntity<Film> getById(@PathVariable Long id) {
         return ResponseEntity.of(Optional.of(filmService.getById(id)));
     }

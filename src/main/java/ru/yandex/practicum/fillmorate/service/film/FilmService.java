@@ -4,26 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.fillmorate.mapper.film.FilmMapper;
 import ru.yandex.practicum.fillmorate.model.film.Film;
-import ru.yandex.practicum.fillmorate.model.film.LikesComparator;
-import ru.yandex.practicum.fillmorate.model.user.User;
 import ru.yandex.practicum.fillmorate.requests.film.FilmAddRequest;
 import ru.yandex.practicum.fillmorate.requests.film.FilmUpdateRequest;
 import ru.yandex.practicum.fillmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.fillmorate.storage.like.LikeDbStorage;
 import ru.yandex.practicum.fillmorate.storage.user.UserStorage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    FilmStorage filmStorage;
-    UserStorage userStorage;
-
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private final LikeDbStorage likeStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, LikeDbStorage likeDbStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.likeStorage = likeDbStorage;
     }
 
     public Film addFilm(FilmAddRequest request) {
@@ -38,6 +37,8 @@ public class FilmService {
                 film.setDuration(request.getDuration());
                 film.setName(request.getName());
                 film.setReleaseDate(request.getReleaseDate());
+                film.setGenres(request.getGenres());
+                film.setMpa(request.getMpa());
 
         return filmStorage.update(film);
     }
@@ -47,28 +48,23 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
-        Film film = filmStorage.getById(filmId);
-        User user = userStorage.getById(userId);
-        film.getLikes().add(user.getId());
 
-        return film;
+        return likeStorage.addLike(
+                filmStorage.getById(filmId),
+                userStorage.getById(userId)
+        );
     }
 
     public Film deleteLike(Long filmId, Long userId) {
-        Film film = filmStorage.getById(filmId);
-        User user = userStorage.getById(userId);
-        film.getLikes().remove(user.getId());
-
-        return film;
+        return likeStorage.deleteLike(
+                filmStorage.getById(filmId),
+                userStorage.getById(userId)
+        );
     }
 
     public List<Film> getPopular(int count) {
-        List<Film> films = filmStorage.getAll();
-        films.sort(new LikesComparator());
 
-        return films.stream()
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getPopular(count);
     }
 
     public Film getById(Long id) {

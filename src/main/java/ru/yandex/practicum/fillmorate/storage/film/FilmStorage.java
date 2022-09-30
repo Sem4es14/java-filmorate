@@ -8,7 +8,6 @@ public interface FilmStorage {
     Film save(Film film);
     Film update(Film film);
     List<Film> getAll();
-    Long deleteFilm(Long id);
-
     Film getById(Long id);
+    List<Film> getPopular(int count);
 }

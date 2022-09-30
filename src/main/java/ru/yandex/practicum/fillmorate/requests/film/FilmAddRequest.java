@@ -1,14 +1,22 @@
 package ru.yandex.practicum.fillmorate.requests.film;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.yandex.practicum.fillmorate.model.genre.Genre;
+import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.requests.validation.AfterDate;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FilmAddRequest {
     @NotBlank(message = "Name cannot be empty")
     private String name;
@@ -18,5 +26,8 @@ public class FilmAddRequest {
     private LocalDate releaseDate;
     @Positive(message = "Duration cannot be negative")
     private Long duration;
+    private Set<Genre> genres;
+    @NotNull(message = "mpa cannot be null")
+    private Mpa mpa;
 }
 

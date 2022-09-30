@@ -45,14 +45,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Long deleteFilm(Long id) {
-        if (!films.containsKey(id)) {
-            throw new FilmNotFound("Film with id: " + id + " is not found");
-        }
-        films.remove(id);
-
-        return id;
+    public List<Film> getPopular(int count) {
+        return null;
     }
+
+
 }
 
 

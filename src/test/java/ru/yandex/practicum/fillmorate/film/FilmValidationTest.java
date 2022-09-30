@@ -1,10 +1,12 @@
 package ru.yandex.practicum.fillmorate.film;
 
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.fillmorate.controller.film.FilmController;
 import ru.yandex.practicum.fillmorate.model.FilmRequest;
+import ru.yandex.practicum.fillmorate.model.mpa.Mpa;
 import ru.yandex.practicum.fillmorate.service.film.FilmService;
 
 import static org.hamcrest.Matchers.containsString;
@@ -22,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(FilmController.class)
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmValidationTest {
     Gson gson = new Gson();
     FilmRequest film;
@@ -39,6 +44,7 @@ public class FilmValidationTest {
                 .description("nice nice")
                 .duration(125)
                 .releaseDate("2013-10-10")
+                .mpa(new Mpa(1L ,""))
                 .build();
     }
 

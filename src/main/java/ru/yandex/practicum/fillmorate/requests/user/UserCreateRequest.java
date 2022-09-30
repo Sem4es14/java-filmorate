@@ -1,6 +1,8 @@
 package ru.yandex.practicum.fillmorate.requests.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.fillmorate.requests.validation.WithoutWhitespace;
 
 import javax.validation.constraints.Email;
@@ -9,6 +11,8 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserCreateRequest {
     @Email(message = "Unsupported email type")
     @NotEmpty(message = "Email cannot be empty")
